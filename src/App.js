@@ -1,23 +1,50 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+
+import { useEffect } from "react";
+import { useState } from "react";
+import PropioDataTable from "./components/PropioDataTable";
 
 function App() {
+  
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState([]);
+
+
+  const columns = [
+    {
+      name: "Id",
+      selector: "id",
+      sortable: true,
+    },
+    {
+      name: "Descripción",
+      selector: "descripcion",
+      sortable: true,
+      right: true,
+    },
+    {
+      name: "Gentilicio",
+      selector: "gentilicio",
+      sortable: true,
+      right: true,
+    },
+    {
+      name: "ISO_NAC",
+      selector: "isonac",
+      sortable: true,
+      right: true,
+    },
+  ];
+  useEffect(() => {
+    setLoading(true)
+    fetch('https://localhost:44325/api/Nacionalidads')
+      .then(response => response.json())
+      .then(data => { setLoading(false); setData(data); });
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <PropioDataTable columns={columns} data={data} loading={loading} pagination={true} />
     </div>
   );
 }
